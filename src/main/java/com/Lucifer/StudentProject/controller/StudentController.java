@@ -7,10 +7,9 @@ import com.Lucifer.StudentProject.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
 
@@ -76,18 +75,6 @@ public class StudentController {
         );
     }
 
-    @PostMapping(
-            value = "/{id}/image",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
-    public ResponseEntity<StudRes> uploadProfileImage(
-            @PathVariable Integer id,
-            @RequestParam("file") MultipartFile file
-    ) {
-        return new ResponseEntity<>(
-                studentService.uploadFile(id, file),
-                HttpStatus.OK
-        );
-    }
+
 
 }

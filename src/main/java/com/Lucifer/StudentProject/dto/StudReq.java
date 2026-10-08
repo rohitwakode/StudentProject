@@ -36,10 +36,11 @@ public record StudReq(
         @NotEmpty(message = "At least one qualification is required")
         List<@NotBlank(message = "Qualification cannot be blank") String> qualifications,
 
-        @NotEmpty(message = "At least one technology is required")
         List<@NotBlank(message = "Technology cannot be blank") String> techStack,
 
         @Size(max = 500, message = "Description cannot exceed 500 characters")
-        String description
+        String description,
+        
+        String profileImage
 ) {
 }

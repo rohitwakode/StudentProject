@@ -76,7 +76,7 @@ public class AuthService {
     public String verifyOtp(OtpReq otpReq){
         User user = userRepo.findByEmail(otpReq.email());
         if(user==null){
-            throw  new InvalidCredentials("invalid otp");
+            throw new InvalidCredentials("invalid otp");
         }
         if(user.getResetOtp()==null){
             throw  new InvalidCredentials("Otp not Genrated");

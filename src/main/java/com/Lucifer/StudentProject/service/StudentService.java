@@ -8,17 +8,10 @@ import com.Lucifer.StudentProject.model.Student;
 import com.Lucifer.StudentProject.repo.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
 @Service
 public class StudentService {
-
-    @Autowired
-    private FileStorageService fileStorageService;
 
     @Autowired
     private StudentRepo studentRepo;
@@ -38,6 +31,7 @@ public class StudentService {
         student.setQualifications(dto.qualifications());
         student.setTechStack(dto.techStack());
         student.setDescription(dto.description());
+        student.setProfileImage(dto.profileImage());
         Student savedStudent = studentRepo.save(student);
         return mapToRes(savedStudent);
     }
@@ -73,6 +67,9 @@ public class StudentService {
         }
         if (dto.description() != null && !dto.description().trim().isEmpty()) {
             existingStudent.setDescription(dto.description());
+        }
+        if (dto.profileImage() != null && !dto.profileImage().trim().isEmpty()) {
+            existingStudent.setProfileImage(dto.profileImage());
         }
         Student updatedStudent = studentRepo.save(existingStudent);
         return mapToRes(updatedStudent);
@@ -110,34 +107,6 @@ public class StudentService {
                 .toList();
     }
 
-    @Transactional
-    public StudRes uploadFile(Integer id,MultipartFile file) {
-        Student student = studentRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("student not found"));
-        //validation
-
-        if (file.isEmpty()) {
-            throw new ResourceNotFound("file cannot be empty");
-        }
-        String contentType = file.getContentType();
-        if (!"image/jpeg".equals(contentType)&& !"image/png".equals(contentType)) {
-            throw new ResourceNotFound("only image/jpg are allowed");
-        }
-        if (file.getSize() >= 5*1024*1024) {
-            throw new ResourceNotFound("file size is too large");
-        }
-
-        try {
-
-            String fileName=fileStorageService.storeFile(file);
-            student.setProfileImage(fileName);
-            Student savedStudent = studentRepo.save(student);
-            return mapToRes(savedStudent);
-
-        }catch (IOException e){
-            throw new ResourceNotFound("failed to store the image");
-        }
-    }
 
     StudRes mapToRes(Student student) {
         return new StudRes(

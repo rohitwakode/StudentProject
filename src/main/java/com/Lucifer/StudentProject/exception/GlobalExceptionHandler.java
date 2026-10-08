@@ -42,14 +42,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto>handleMethodException(MethodArgumentNotValidException ex, HttpServletRequest request) {
 
         Map<String, String> errors = new HashMap<>();
-        ex
-                .getBindingResult()
+        ex.getBindingResult()
                 .getFieldErrors()
-                .forEach(fieldError -> {
-                    errors.
-                            put(fieldError.getField(),
-                            fieldError.getDefaultMessage());
-        });
+                .forEach(fieldError ->{
+                    errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+                } );
+
         ErrorResponseDto error= new ErrorResponseDto(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
